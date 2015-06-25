@@ -1,0 +1,6 @@
+<div class="header">
+	{% block header %}
+	<a href="{{ url_for('frontend.board', board_tag=board.tag) }}"><h1>/{{ board.tag }}/ &#8212; {{ board.title }}</h1></a>
+	<hr>
+	{% endblock header %}
+</div>

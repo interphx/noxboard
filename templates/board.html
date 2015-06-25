@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% from 'macros.jinja2' import render_post, render_thread_preview, render_posting_form with context %}
+{% block title %}noxboard - /{{ board.tag }}/{% endblock title %}
+
+{% block content %}
+	{{ render_posting_form(postForm, config, files_count, toggle_message_on="Создать тред")|safe }}
+	{% for thread in threads %}
+		{{ render_thread_preview(thread, config.app.thread_preview_posts_count)|safe }}
+	{% endfor %}
+	
+	<div class="pagination">
+	{%- for page in pagination.iter_pages() %}
+		{% if page %}
+			{% if page != pagination.page %}
+				<a href="{{ url_for('frontend.board', board_tag=board.tag, page=page) }}">[{{ page }}]</a>
+			{% else %}
+				<b>[{{ page }}]</b>
+			{% endif %}
+		{% else %}
+			<span class="ellipsis">...</span>
+		{% endif %}
+	{%- endfor %}
+	</div>
+{% endblock content %}

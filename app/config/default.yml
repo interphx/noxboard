@@ -1,0 +1,17 @@
+app: 
+  template_dir: templates
+  static_dir: static
+  database_uri: sqlite:///test.db
+  max_file_size: 10485760
+  max_files_per_post: 5
+  allow_textless_posts: false
+  
+  thread_preview_posts_count: 3
+  default_threads_per_page: 3
+  max_threads_per_page: 3
+  csrf_secret_key: deepthroatanalpenetration
+attachments:
+  base_dir: uploads
+  hashing_algorithm: sha1
+  preview_size: [300, 300]
+flask: {}

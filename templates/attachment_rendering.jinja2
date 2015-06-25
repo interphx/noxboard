@@ -1,0 +1,27 @@
+{% macro render_attachment(attachment, is_single=false) %}
+<div class="attachment{{ ' single' if is_single }}">
+	{% if attachment.is_local and attachment.type in ['jpg', 'png', 'gif'] %}
+		{{ render_local_image(attachment)|safe }}
+	{% elif attachment.type == 'youtube' %}
+		{{ render_youtube_video(attachment)|safe }}
+	{% elif attachment.type == 'prostopleer' %}
+		{{ render_prostopleer_track(attachment)|safe }}
+	{% else %}
+		{{attachment.resource}} ({{attachment.type}}, {{attachment.is_local == true}})
+	{% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_local_image(image, is_single) %}
+	<a href="/{{ image.resource }}" target="_blank"><img src="/{{ image.resource }}"></a>
+{% endmacro %}
+
+{% macro render_youtube_video(video, is_single) %}
+	<iframe class="ytplayer" type="text/html" width="300" height="300" src="http://www.youtube.com/embed/{{ video.resource }}" frameborder="0"></iframe>
+{% endmacro %}
+
+{% macro render_prostopleer_track(track, is_single) %}
+	{% set track_id = track.resource.split(':')[0] %}
+	{% set embed_id = track.resource.split(':')[1] %}
+	<object width="87" height="83"><param name="movie" value="http://embed.pleer.com/mini/track?id={{ embed_id }}&t=blue"></param><embed src="http://embed.pleer.com/mini/track?id={{ embed_id }}&t=blue" type="application/x-shockwave-flash" width="87" height="83"></embed></object>
+{% endmacro %}

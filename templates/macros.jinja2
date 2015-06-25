@@ -1,0 +1,144 @@
+{% from 'attachment_rendering.jinja2' import render_attachment %}
+
+{% macro render_post(post, locked_icon=false, pinned_icon=false, thread_link=false) -%}
+<div class="post{{ ' op' if post.is_op }}" data-post-id="{{post.id}}">
+	<div class="header">
+		<label>
+			{% if post.topic %}<span class="topic">{{ post.topic }}</span>{% endif %}
+			<span class="author_name">{{ post.author_name|default("Аноним", true) }}</span>
+			<span class="date">{{ post.created_at }}</span>
+		</label>
+		<span class="reflink">#{{ post.id }}</span>
+		{% if locked_icon %}<img class="icon-locked" width="16" height="16" src="/static/assets/img/locked.png">{% endif %}
+		{% if pinned_icon %}<img class="icon-pinned" width="16" height="16" src="/static/assets/img/pinned.png">{% endif %}
+		{% if thread_link %}
+		[<a href="{{ url_for('frontend.thread', thread_id=post.thread.id, board_tag=post.thread.board.tag) }}">Ответ</a>]
+		{% endif %}
+	</div>
+	
+	<div class="attachments{{ ' single' if post.attachments|length == 1}}">
+		{% for attachment in post.attachments %}
+			{#<li><b>{{ attachment.resource }}</b> ({{ attachment.type }}{{ ', remote' if not attachment.local }})</li>#}
+			{{ render_attachment(attachment, is_single=post.attachments|length == 1)|safe }}
+		{% endfor %}
+	</div>
+	
+	<div class="text">
+	{{ post.text|e|urlize }}
+	</div>
+	<div class="clearfix"></div>
+</div>
+{%- endmacro %}
+
+{% macro render_thread(thread) -%}
+<div class="thread{{ ' pinned' if thread.is_pinned }}{{ ' open' if thread.is_open }}" data-thread-id="{{ thread.id }}">
+	{% for post in thread.posts %}
+		{{ render_post(post) }}
+	{% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro render_thread_preview(thread, last_messages) -%}
+<div class="thread preview{{ ' pinned' if thread.is_pinned }}{{ ' open' if thread.is_open }}" data-thread-id="{{ thread.id }}">
+	{{ render_post(thread.posts[0], thread_link=true, pinned_icon=thread.is_pinned, locked_icon=thread.is_locked) }}
+	{% if thread.posts.count() > 1 + last_messages %}
+	<span class="omitted">Пропущено {{ thread.posts.count() - last_messages - 1 }} ответов, TODO</span>
+	{% endif %}
+	
+	{% for post in thread.posts[1:][-last_messages:] %}
+		{{ render_post(post) }}
+	{% endfor %}
+</div>
+<hr>
+{%- endmacro %}
+
+{% macro render_field(field) %}
+  <tr>
+	  <td>{{ field.label }}</td>
+	  <td>{{ field(**kwargs)|safe }}</td>
+	  <td>{% if field.errors %}
+		<ul class="errors">
+		{% for error in field.errors %}
+		  <li class="error">{{ error }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	  </td>
+  </tr>
+{% endmacro %}
+
+{% macro render_errors(field) %}
+<ul class="errors">
+{% for error in field.errors %}
+  <li class="error">{{ error }}</li>
+{% endfor %}
+</ul>
+{% endmacro %}
+
+
+{% macro render_posting_form(postForm, config, files_count, toggle_message_on="Показать форму постинга", toggle_message_off="Скрыть форму постинга") -%}
+<div class="posting-form-container">
+	<span class="posting-form-toggle js-only" data-form-open="false" data-message-on="{{ toggle_message_on }}" data-message-off="{{ toggle_message_off }}">[ {{ toggle_message_on }} ]</span>
+	<form class="posting-form nojs-only" method="POST" enctype="multipart/form-data">
+		<table>
+			<tr class="field">
+				<td class="name">Имя</td>
+				<td class="widget"><input type="text" size="28" name="author_name"></td>
+				<td class="errors">{{ render_errors(postForm.author_name)|safe }}</td>
+			</tr>
+			
+			<tr class="field">
+				<td class="name">E-mail</td>
+				<td class="widget"><input type="text" size="28" name="author_email"></td>
+				<td class="errors">{{ render_errors(postForm.author_email)|safe }}</td>
+			</tr>
+		
+			<tr class="field">
+				<td class="name">Тема</td>
+				<td class="widget"><input type="text" size="28" name="topic"></td>
+				<td class="errors">{{ render_errors(postForm.topic)|safe }}</td>
+			</tr>
+			
+			<tr class="field">
+				<td class="name">Текст</td>
+				<td class="widget"><textarea rows="4" cols="48" name="text"></textarea></td>
+				<td class="errors">{{ render_errors(postForm.text)|safe }}</td>
+			</tr>
+
+			{% for file_field in postForm.files %}
+			<tr class="field">
+				<td class="name">Файл</td>
+				<td class="widget"><input type="file"  name="{{ file_field.name }}"></td>
+				<td class="errors">{{ render_errors(file_field)|safe }}</td>
+			</tr>
+			{% endfor %}
+			
+			{% for link_field in postForm.links %}
+			<tr class="field">
+				<td class="name">Ссылка</td>
+				<td class="widget"><input type="text" size="48" name="{{ link_field.name }}"></td>
+				<td class="errors">{{ render_errors(link_field)|safe }}</td>
+			</tr>
+			{% endfor %}
+			
+			{% if files_count < config.app.max_files_per_post %}
+				<tr><td colspan="3"><a href="?files_count={{ files_count + 1 }}">[Добавить ещё файл]</a> (максимум {{ config.app.max_files_per_post }})</td></tr>
+			{% endif %}
+			
+			<tr class="field">
+				<td class="name">Перейти к</td>
+				<td class="widget">
+					<label><input type="radio" name="redirect_to" value="board">доске</label>
+					<label><input type="radio" name="redirect_to" value="thread" checked="checked">треду</label>
+				</td>
+				<td class="errors">{{ render_errors(postForm.redirect_to)|safe }}</td>
+			</tr>
+
+			
+			{{ postForm.csrf_token }}
+		</table>
+		<input type="submit" value="Отправить">
+	</form>
+
+</div>
+{%- endmacro %}

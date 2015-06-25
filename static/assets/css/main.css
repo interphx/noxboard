@@ -1,0 +1,186 @@
+body {
+	color: #babdc0;
+	background: #10101f url(/static/assets/img/bg.jpg);
+	background-repeat: repeat;
+	font-family: "Trebuchet MS", Trebuchet, serif;
+	padding: 8px;
+}
+
+a {
+	color: #0096ff;
+	text-decoration: none;
+}
+a:hover {
+	color: #0066FF;
+}
+
+.post a {
+	text-decoration: underline;
+}
+
+.footer {
+        text-align:center;
+        font-size:12px;
+        font-family:serif;
+        margin: 2em 0 0 0;
+}
+
+.quote {
+	background:inherit;
+	color:#789922;
+}
+
+.reflink {
+	font-size: .8em;
+	font-weight: bold;
+}
+
+.author_name {
+	color:#004A99;
+	font-weight:bold;
+}
+
+.omitted {
+    color:#666666;
+}
+
+hr {
+	height: 3px;
+    border: none;
+    background: url('/static/assets/img/line.png') center no-repeat;
+    overflow: hidden;
+}
+
+.post {
+	background-image: url(/static/assets/img/post-bg.jpg);
+	background-repeat: repeat;
+	box-shadow: 0 0 10px rgba(0,0,0,0.6);
+	border: solid 1px #1c1c2a;
+	margin: 0.5em;
+	padding: 0.5em;
+	min-width: 70%;
+	/* TODO: add all vendors */
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	/* TODO: test these, maybe unnecessary */
+	word-wrap: break-word;
+	word-wrap: break-all;
+	display: table;
+}
+
+.post.op {
+	background: none;
+	border: none;
+	box-shadow: none;
+}
+
+.post .header {
+	/*background: white;
+	border-bottom: 1px solid black;*/
+}
+
+.post .text {
+	margin: 0.5em;
+	float: left;
+}
+
+.post .topic {
+	font-size: 1.2em;
+	color:#0096ff;
+	font-weight:bold;
+	text-shadow: 0 0 4px #0066ff;
+}
+
+.thread {
+	margin: 1em 0 1em 0;
+}
+
+.thread.pinned {
+	/*border: 2px solid green;*/
+}
+
+.posting-form-container {
+	text-align: center;
+	width: 100%;
+}
+
+.posting-form {
+	width: 100%;
+	text-align: center;
+}
+
+.posting-form table {
+	margin: 0 auto;
+}
+
+.posting-form .field .name {
+	text-align: right;
+	color: #004A99;
+	font-weight: bold;
+	padding: 3px;
+}
+
+.posting-form .field .widget, .posting-form .field .errors {
+	text-align: left;
+}
+
+.posting-form-toggle {
+	color: #0096ff;
+	cursor: pointer;
+	font-size: 1.2em;
+}
+
+.posting-form-toggle:hover {
+	color: #0066FF;
+}
+
+input, textarea {
+	background-color: #10101f;
+	color: #babdc0;
+	border: solid 1px #1c1c2a;
+	transition-duration: 300ms;
+	transition-property: border;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	padding: 3px;
+}
+
+input[type="submit"] {
+	box-shadow: inset 0px 0px 3px #babdc0;
+}
+
+input[type="file"] {
+    max-width: 25em;
+    text-overflow: ellipsis;
+}
+
+input:hover, textarea:hover {
+	border: solid 1px #2c2c42;
+	transition-duration: 100ms;
+}
+
+input:focus, textarea:focus {
+	border: solid 1px #babdc0;
+	transition-duration: 300ms;
+}
+
+.attachments.single {
+	float: left;
+}
+
+.attachment {
+	display: inline-block;
+}
+
+.attachment img {
+	max-width: 300px;
+	max-height: 300px;
+}
+
+.clearfix {
+	clear: both;
+}
+
+/* Elements with "nojs-only" and "js-only" classes are only shown if user have javascript disabled or enabled respectively */
+html.js .nojs-only { display: none; }
+html:not(.js) .js-only { display: none; }
