@@ -37,6 +37,12 @@ class AttachmentTooLargeException(AttachmentException):
 class AttachmentNotSupportedException(AttachmentException):
     pass
 
+class AttachmentsException(Exception):
+    pass
+
+class TooManyAttachmentsException(AttachmentsException):
+    pass
+
 def createAttachment(type, resource):
     fetcher = findMatchingFetcher(type, resource)
     if not fetcher:
@@ -72,7 +78,7 @@ class Fetcher:
     def __repr__(self):
         return str(self)
 
-class ImageFileFetcher(Fetcher):
+class ImageUploadFetcher(Fetcher):
     def __init__(self, name, whitelist, directory=None):
         super().__init__(name, directory)
         self.whitelist = whitelist
@@ -103,7 +109,6 @@ class ImageFileFetcher(Fetcher):
         type = getExt(task.filename)
         return AttachmentData(resource=pathname2url(location), type=type, local=True, hash=hash)
 
-# TODO: use mime-type as type, not extension
 class RemoteImageFetcher(Fetcher):
     def __init__(self, name, whitelist, directory=None, max_file_size=config['app']['max_file_size']):
         super().__init__(name, directory)
@@ -141,8 +146,8 @@ class RemoteImageFetcher(Fetcher):
             file = download_bytes(url, MemoryFile(), max_file_size=self.max_file_size)
         except FileSizeException:
             raise AttachmentTooLargeException('File is too large!')
-        # TODO: chunked download, file too large exception
-        hash = hashlib.new(HASHING_ALOGIRITHM, file.read()).hexdigest()
+
+        hash = hashlib.new(HASHING_ALOGIRITHM, file.getvalue()).hexdigest()
         
         duplicate = Attachment.query.filter_by(hash=hash).first()
         if duplicate is not None:

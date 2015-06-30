@@ -17,7 +17,8 @@
 {% endmacro %}
 
 {% macro render_youtube_video(video, is_single) %}
-	<iframe class="ytplayer" type="text/html" width="300" height="300" src="http://www.youtube.com/embed/{{ video.resource }}" frameborder="0"></iframe>
+	<label class="yt-preview js-only" style="background-image: url(http://img.youtube.com/vi/{{ video.resource }}/0.jpg);"></label>
+	<iframe class="yt-player nojs-only" type="text/html" width="320" height="262" src="http://www.youtube.com/embed/{{ video.resource }}" frameborder="0"></iframe>
 {% endmacro %}
 
 {% macro render_prostopleer_track(track, is_single) %}

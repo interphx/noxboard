@@ -1,5 +1,5 @@
 import os
-from app.attachments import createAttachment
+from app.attachments import createAttachment, AttachmentTooLargeException, AttachmentNotSupportedException, TooManyAttachmentsException
 from app import config, db
 from flask import Blueprint, request, redirect, url_for, render_template, send_from_directory
 from app.models import Board, Thread, Post, Attachment
@@ -9,13 +9,31 @@ from app.forms import PostForm
 frontend = Blueprint('frontend', __name__)
 
 def createAttachmentsFromForm(form):
-    files = [file_field.data for file_field in form.files if file_field.data]
-    links = [link_field.data for link_field in form.links if link_field.data]
-    if len(files) + len(links) > config['app']['max_files_per_post']:
-        raise AttachmentsException('Too many files')
+    result = []
+    count = 0
+    
+    def createWithErrors(type, field):
+        nonlocal count
+        if not field.data: return
+        count += 1
+        if count > config['app']['max_files_per_post']: raise TooManyAttachmentsException('Too many files')
+        try:
+            result.append(createAttachment(type, field.data))
+        except AttachmentTooLargeException as e:
+            field.errors.append('Файл слишком большой')
+            raise e
+        except AttachmentNotSupportedException as e:
+            field.errors.append('Неподдерживаемый формат приложения')
+            raise e
+        except AttachmentException as e:
+            field.errors.append('Не удаётся загрузить файл')
+            raise e
 
-    result = [createAttachment('file', file) for file in files]
-    result += [createAttachment('link', link) for link in links]
+    for file_field in form.files:
+        createWithErrors('file', file_field)
+
+    for link_field in form.links:
+        createWithErrors('link', link_field)
     
     return result
 
@@ -81,7 +99,7 @@ def board(board_tag='b', page=1):
             print('Exception: doing rollback (call from board)')
             print('!!!!!!!!!!!!!!!!!!!!!!')
             db.session.rollback()
-            raise e
+            #raise e
         else:
             db.session.commit()
             if postForm.redirect_to.data == 'thread':
@@ -122,12 +140,12 @@ def thread(board_tag, thread_id):
             post = createPostFromForm(postForm, thread, False)
             db.session.add(post)
             
-        except Exception as e:
+        except:
             print('!!!!!!!!!!!!!!!!!!!!!!')
             print('Exception: doing rollback (call from thread)')
             print('!!!!!!!!!!!!!!!!!!!!!!')
             db.session.rollback()
-            raise e
+            #raise e
         else:
             db.session.commit()
             if postForm.redirect_to.data == 'thread':

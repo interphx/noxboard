@@ -76,7 +76,7 @@
 {% endmacro %}
 
 
-{% macro render_posting_form(postForm, config, files_count, toggle_message_on="Показать форму постинга", toggle_message_off="Скрыть форму постинга") -%}
+{% macro render_posting_form(postForm, config, files_count, toggle_message_on="Показать форму", toggle_message_off="Скрыть форму") -%}
 <div class="posting-form-container">
 	<span class="posting-form-toggle js-only" data-form-open="false" data-message-on="{{ toggle_message_on }}" data-message-off="{{ toggle_message_off }}">[ {{ toggle_message_on }} ]</span>
 	<form class="posting-form nojs-only" method="POST" enctype="multipart/form-data">

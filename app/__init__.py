@@ -29,7 +29,7 @@ import app.models
 
 # UPLOADS
 import app.attachments
-attachments.registerFetcher('file', attachments.ImageFileFetcher(
+attachments.registerFetcher('file', attachments.ImageUploadFetcher(
     name = 'upload_images',
     whitelist = ['jpg', 'png', 'gif', 'tga', 'bmp'],
     directory = 'images'

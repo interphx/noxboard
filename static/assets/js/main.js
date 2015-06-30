@@ -16,7 +16,7 @@ var nodeFactory = new (function(){
 				node.find('.header .reflink').html('#' + data.id);
 				node.find('.text').html(data.text);
 			} else {
-				// TODO: throw error
+				throw new Error('No such template: ' + template_name);
 			}
 			return node;
 		}
@@ -68,7 +68,6 @@ var App = function(){
 			
 					});
 				} else {
-					console.log('fetching for thread');
 					self.getThreadPostsAfter(thread_id, last_post_id)
 					.done(function(json) {
 						if (!json.posts) { return; }
@@ -96,7 +95,7 @@ var App = function(){
 app = new App();
 app.init();
 
-//$('.posting-form-toggle + .posting-form').hide();
+/* Posting form */
 $('.posting-form-toggle').each(function() {
 	$this = $(this);
 	$this.html('[ ' + $this.attr('data-message-on') + ' ]');
@@ -118,3 +117,11 @@ $('.posting-form-toggle').on('click', function() {
 	}
 	
 });
+
+/* Youtube previews */
+$('.yt-preview').on('click', function() {
+	$this = $(this);
+	$video = $this.next('.yt-player');
+	$video.show();
+	$this.hide();
+})

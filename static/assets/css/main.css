@@ -177,6 +177,30 @@ input:focus, textarea:focus {
 	max-height: 300px;
 }
 
+.yt-preview {
+	display: block;
+	position: relative;
+	height: 262px;
+	width: 320px;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.yt-preview:before {
+	content: "";
+	display: block;
+	width: 320px;
+	height: 262px;
+	position: absolute;
+	background: transparent url(/static/assets/img/video-overlay.png) no-repeat center;
+}
+
+.yt-preview:hover:before {
+	background-size: 120% 120%;
+}
+
 .clearfix {
 	clear: both;
 }
