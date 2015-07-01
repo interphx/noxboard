@@ -23,6 +23,10 @@ application.config.update(config['flask'])
 
 db = SQLAlchemy(application)
 
+# FLASK
+
+import app.jinja2_filters
+
 # MODELS
 import app.models
 ######

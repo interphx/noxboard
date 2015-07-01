@@ -24,7 +24,7 @@
 	</div>
 	
 	<div class="text">
-	{{ post.text|e|urlize }}
+	{{ post.text|e|urlize|aib_markup|safe }}
 	</div>
 	<div class="clearfix"></div>
 </div>

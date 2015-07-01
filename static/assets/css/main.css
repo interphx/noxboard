@@ -91,6 +91,24 @@ hr {
 	text-shadow: 0 0 4px #0066ff;
 }
 
+.post .spoiler {
+	background: #323338;
+	color: #323338;
+}
+
+.post .spoiler a {
+	visibility: hidden;
+}
+
+.post .spoiler:hover {
+	color: #757580;
+	text-shadow: 1px 1px 0px #090909;
+}
+
+.post .spoiler:hover a {
+	visibility: visible;
+}
+
 .thread {
 	margin: 1em 0 1em 0;
 }
@@ -134,7 +152,7 @@ hr {
 	color: #0066FF;
 }
 
-input, textarea {
+input, textarea, .file-upload-button {
 	background-color: #10101f;
 	color: #babdc0;
 	border: solid 1px #1c1c2a;
@@ -145,7 +163,7 @@ input, textarea {
 	padding: 3px;
 }
 
-input[type="submit"] {
+input[type="submit"], .file-upload-button {
 	box-shadow: inset 0px 0px 3px #babdc0;
 }
 
@@ -199,6 +217,11 @@ input:focus, textarea:focus {
 
 .yt-preview:hover:before {
 	background-size: 120% 120%;
+}
+
+.file-upload-button input[type="file"] {
+	position: fixed;
+	top: -1000px;
 }
 
 .clearfix {
