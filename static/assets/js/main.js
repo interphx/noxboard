@@ -238,5 +238,14 @@ $(document).ready(function() {
 			$autoupdate_toggles.next('.autoupdate-countdown').html('Автообновление');
 		}
 	});
+	
+	/* Post links (works for dynamic elements) */
+	$('thread').on('click', 'a.postlink' function() {
+		
+	});
+	
+	$('thread').on('mouseover', 'a.postlink' function() {
+		// TODO
+	});
 
 });
