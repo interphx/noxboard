@@ -3,7 +3,7 @@
 A modern forum/imageboard engine built with Flask framework. Usable, but work in progress.
 
 ### Installation
-1. Install the [dependencies](#Dependencies)
+1. Install the [dependencies](#dependencies)
 2. Clone this repository
 3. Open config and set ```flask.HOST``` to 127.0.0.1  to run locally or 0.0.0.0 to run as public server. Also set ```flask.PORT``` at your convenience.
 4. Set ```app.csrf_secret_key``` to long random string
