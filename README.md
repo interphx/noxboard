@@ -25,6 +25,7 @@ Built-in Flask server is for debugging purposes. It is therefore advised to wait
 - Support for multiple boards
 - Rendering with Jinja2
 - Almost awesome front-end
+- Russian frontend (smells like vodka!)
 
 ##### To be added
 - Posting with AJAX
@@ -37,6 +38,7 @@ Built-in Flask server is for debugging purposes. It is therefore advised to wait
 - Caching
 - Virtualenv support
 - Run as WSGI application
+- i18n (particularly English language support)
 
 ### Dependencies
 Everything is easily installable with pip:
