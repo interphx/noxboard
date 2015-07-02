@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from 'macros.jinja2' import render_post, render_thread, render_posting_form, render_thread_nav with context %}
+{% from 'rendering.jinja2' import render_post, render_thread, render_posting_form, render_thread_nav with context %}
 {% block title %}noxboard - /{{ board.tag }}/{% endblock title %}
 
 {% block content %}

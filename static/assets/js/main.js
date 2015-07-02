@@ -240,11 +240,8 @@ $(document).ready(function() {
 	});
 	
 	/* Post links (works for dynamic elements) */
-	$('thread').on('click', 'a.postlink' function() {
-		
-	});
 	
-	$('thread').on('mouseover', 'a.postlink' function() {
+	$('thread').on('mouseover', 'a.postlink', function() {
 		// TODO
 	});
 
