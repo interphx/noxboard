@@ -131,9 +131,9 @@ var App = function(){
 				// Optionally update thread previews on board page; TODO
 				if (thread.hasClass('preview') && userSettings.autoupdate_board) {
 					self.getThreadPostsAfter(thread_id, last_post_id)
-					.done(function(json) {
-						if (!json.posts) { return; }
-						var posts = json.posts.slice(-self.config.THREAD_PREVIEW_POSTS_COUNT);
+					.done(function(response) {
+						if (!response.posts) { return; }
+						var posts = response.posts.slice(-self.config.THREAD_PREVIEW_POSTS_COUNT);
 						var delete_count = Math.min(thread.find('.post').length - 1, posts.length);
 						
 						// TODO: nice animations
@@ -147,17 +147,20 @@ var App = function(){
 					});
 				} else {
 					self.getThreadPostsAfter(thread_id, last_post_id)
-					.done(function(json) {
-						if (!json.posts) { return; }
-						for (var i = 0; i < json.posts.length; ++i) {
-							var post = nodeFactory.buildFromData('post', json.posts[i]);
-							// TODO: nice animations
-							post.css('display', 'none');
-							thread.append(post);
-							post.fadeIn();
-						}
-						self.autoupdateCountdown.start();
-					});
+						.done(function(response) {
+							if (!response.posts) { return; }
+							for (var i = 0; i < response.posts.length; ++i) {
+								var post = nodeFactory.buildFromData('post', response.posts[i]);
+								// TODO: nice animations
+								post.css('display', 'none');
+								thread.append(post);
+								post.fadeIn();
+							}
+							self.autoupdateCountdown.start();
+						})
+						.error(function() {
+							self.autoupdateCountdown.start();
+						});
 				}
 			})
 		},
@@ -170,7 +173,11 @@ var App = function(){
 						$('.autoupdate-countdown').html('Автообновление через ' + remaining.toString());
 					})
 					.onExpire(function() {
-						self.updateThreads();
+						try {
+							self.updateThreads();
+						} catch(e) {
+							
+						}
 					});
 				this.autoupdateCountdown.start();
 			}
@@ -217,14 +224,17 @@ $(document).ready(function() {
 	});
 
 	/* Autoupdating */
-
-	$('input[type="checkbox"].autoupdate-toggle').on('change', function() {
+	
+	$autoupdate_toggles = $('input[type="checkbox"].autoupdate-toggle')
+	$autoupdate_toggles.on('change', function() {
 		$this = $(this);
 		if ($this.is(':checked')) {
 			app.autoupdateCountdown.start();
+			$autoupdate_toggles.prop('checked', true);
 		} else {
 			app.autoupdateCountdown.stop();
-			$this.next('.autoupdate-countdown').html('Автообновление');
+			$autoupdate_toggles.prop('checked', false);
+			$autoupdate_toggles.next('.autoupdate-countdown').html('Автообновление');
 		}
 	});
 

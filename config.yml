@@ -1,4 +1,5 @@
 app: 
+  debug: true
   # Where to look for templates
   template_dir: templates
   # Static conent will be served from this directory. In production configure your web server to serve static content instead!

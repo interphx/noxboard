@@ -1,4 +1,5 @@
 app: 
+  debug: true
   template_dir: templates
   static_dir: static
   database_uri: sqlite:///test.db
