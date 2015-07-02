@@ -30,6 +30,12 @@
 </div>
 {%- endmacro %}
 
+{%- macro render_thread_nav(thread) %}
+	<div class="thread-nav">
+		[ <label><input class="autoupdate-toggle" type="checkbox"> <span class="autoupdate-countdown">Автообновление</span></label> ]
+	</div>
+{% endmacro -%}
+
 {% macro render_thread(thread) -%}
 <div class="thread{{ ' pinned' if thread.is_pinned }}{{ ' open' if thread.is_open }}" data-thread-id="{{ thread.id }}">
 	{% for post in thread.posts %}

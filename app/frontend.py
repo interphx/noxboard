@@ -8,6 +8,8 @@ from app.forms import PostForm
 
 frontend = Blueprint('frontend', __name__)
 
+# TODO: Errors i18n
+# TODO: Maybe handle TooManyAttachmentsException?
 def createAttachmentsFromForm(form):
     result = []
     count = 0

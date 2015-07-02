@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
-{% from 'macros.jinja2' import render_post, render_thread, render_posting_form with context %}
+{% from 'macros.jinja2' import render_post, render_thread, render_posting_form, render_thread_nav with context %}
 {% block title %}noxboard - /{{ board.tag }}/{% endblock title %}
 
 {% block content %}
 	{{ render_posting_form(postForm, config, files_count, toggle_message_on="Ответить в тред")|safe }}
+	{{ render_thread_nav(thread)|safe }}
 	{{ render_thread(thread)|safe }}
+	{{ render_thread_nav(thread)|safe }}
 {% endblock content %}
