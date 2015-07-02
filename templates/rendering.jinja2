@@ -6,7 +6,7 @@
 		<label>
 			{% if post.topic %}<span class="topic">{{ post.topic }}</span>{% endif %}
 			<span class="author_name">{{ post.author_name|default("Аноним", true) }}</span>
-			<span class="date">{{ post.created_at }}</span>
+			<span class="date">{{ post.created_at|remove_miliseconds }}</span>
 		</label>
 		<span class="reflink">#{{ post.id }}</span>
 		{% if locked_icon %}<img class="icon-locked" width="16" height="16" src="/static/assets/img/locked.png">{% endif %}

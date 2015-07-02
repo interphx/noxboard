@@ -86,7 +86,7 @@ var nodeFactory = new (function(){
 				node.attr('data-post-id', data.id);
 				node.find('.header .topic').html(data.topic);
 				node.find('.header .author_name').html(data.author_name || 'Аноним');
-				node.find('.header .date').html(data.created_at);
+				node.find('.header .date').html(data.created_at.replace(/\.[0-9]+$/, '')); // a bit hacky
 				node.find('.header .reflink').html('#' + data.id);
 				node.find('.text').html(data.text);
 			} else {

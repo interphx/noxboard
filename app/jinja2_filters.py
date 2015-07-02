@@ -61,6 +61,10 @@ def post_smart_escape(s):
     allowed_attributes = {'a': filter_link_attribute}
     return jinja2.Markup( bleach.clean(s, tags=allowed_tags, attributes=allowed_attributes) )
 
+def remove_miliseconds(s):
+    return str(s).rsplit('.', 1)[0]
+
 jinja2.filters.FILTERS['aib_markup'] = aib_markup
 jinja2.filters.FILTERS['post_smart_escape'] = post_smart_escape
+jinja2.filters.FILTERS['remove_miliseconds'] = remove_miliseconds
 
