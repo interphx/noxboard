@@ -240,8 +240,30 @@ $(document).ready(function() {
 	
 	/* Post links (works for dynamic elements) */
 	
-	$('thread').on('mouseover', 'a.postlink', function() {
+	$('.thread').on('mouseover', 'a.postlink', function() {
 		// TODO
+	});
+	
+	// Helper function to smartly toggle on posting forms on a page
+	function showPostingForms() {
+		$forms = $('.posting-form')
+		$hidden_forms = $forms.filter(':hidden');
+		// If there are visible forms, do nothing
+		if ($forms.count - $hidden_forms.count > 0) { return; }
+		$hidden_forms.each(function() {
+			$(this).prev('.posting-form-toggle').click();
+		});
+	}
+	
+	/* Reflink click */
+	
+	$('.thread').on('click', 'a.reflink', function() {
+		var reflink = $(this).html().match(/\d+/);
+		$('.posting-form textarea[name="text"]').each(function() {
+			$this = $(this);
+			$this.val( $this.val() + ">>" + reflink ); 
+		});
+		showPostingForms();
 	});
 
 });

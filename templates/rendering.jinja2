@@ -8,7 +8,7 @@
 			<span class="author_name">{{ post.author_name|default("Аноним", true) }}</span>
 			<span class="date">{{ post.created_at|remove_miliseconds }}</span>
 		</label>
-		<span class="reflink">#{{ post.id }}</span>
+		<a class="reflink">#{{ post.id }}</a>
 		{% if locked_icon %}<img class="icon-locked" width="16" height="16" src="/static/assets/img/locked.png">{% endif %}
 		{% if pinned_icon %}<img class="icon-pinned" width="16" height="16" src="/static/assets/img/pinned.png">{% endif %}
 		{% if thread_link %}

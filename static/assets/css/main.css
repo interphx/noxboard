@@ -30,9 +30,11 @@ a:hover {
 	color:#789922;
 }
 
-.reflink {
+.post .reflink {
 	font-size: .8em;
 	font-weight: bold;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 .author_name {

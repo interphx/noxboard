@@ -7,4 +7,5 @@
 	{{ render_thread_nav(thread)|safe }}
 	{{ render_thread(thread)|safe }}
 	{{ render_thread_nav(thread)|safe }}
+	{{ render_posting_form(postForm, config, files_count, toggle_message_on="Ответить в тред")|safe }}
 {% endblock content %}
