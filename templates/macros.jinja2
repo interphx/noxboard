@@ -121,10 +121,6 @@
 			</tr>
 			{% endfor %}
 			
-			{% if files_count < config.app.max_files_per_post %}
-				<tr><td colspan="3"><a href="?files_count={{ files_count + 1 }}">[Добавить ещё файл]</a> (максимум {{ config.app.max_files_per_post }})</td></tr>
-			{% endif %}
-			
 			<tr class="field">
 				<td class="name">Перейти к</td>
 				<td class="widget">

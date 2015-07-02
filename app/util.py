@@ -9,7 +9,7 @@ from flask import render_template, jsonify
 
 FILE_DOWNLOAD_TIMEOUT = 12
 FILE_DOWNLOAD_CHUNK_SIZE = 1024
-FILE_DOWNLOAD_MAX_SIZE = config['app']['max_file_size']
+FILE_DOWNLOAD_MAX_SIZE = config['attachments']['max_file_size']
 
 VALID_URL_REGEX = re.compile(
     r'^(?:http|ftp)s?://' # http:// or https://

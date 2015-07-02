@@ -110,7 +110,7 @@ class ImageUploadFetcher(Fetcher):
         return AttachmentData(resource=pathname2url(location), type=type, local=True, hash=hash)
 
 class RemoteImageFetcher(Fetcher):
-    def __init__(self, name, whitelist, directory=None, max_file_size=config['app']['max_file_size']):
+    def __init__(self, name, whitelist, directory=None, max_file_size=config['attachments']['max_file_size']):
         super().__init__(name, directory)
         self.whitelist = whitelist
         self.max_file_size = max_file_size

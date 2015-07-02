@@ -13,8 +13,8 @@ class PostForm(Form):
     topic = StringField('Topic', [validators.Length(max=150, message="Topic should be no more than 150 characters long!")])
     text = TextAreaField('Text', text_validators)
     redirect_to = RadioField('Redirect to', choices=[('board', 'Board'), ('thread', 'Thread')], default="thread")
-    files = FieldList(FileField('File'), max_entries=config['app']['max_files_per_post'])
-    links = FieldList(StringField('Link'), [validators.URL(message='Invalid URL!')], max_entries=config['app']['max_files_per_post'])
+    files = FieldList(FileField('File'), max_entries=config['attachments']['max_files_per_post'])
+    links = FieldList(StringField('Link'), [validators.URL(message='Invalid URL!')], max_entries=config['attachments']['max_files_per_post'])
     
     # TODO: just make files and links counts equal to request files count
     def __init__(self, attachments_count):

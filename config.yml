@@ -6,10 +6,6 @@ app:
   # You can use sqlite:///filename to create a SQLite database file in app folder.
   # You can use mysql://user:password@server to connect to MySQL (better use this in production).
   database_uri: sqlite:///test.db
-  # Maximum attachment size in bytes (can be overridden for individual boards)
-  max_file_size: 10485760
-  # Maximum attachments count for single post (can be overridden for individual boards)
-  max_files_per_post: 5
   # Allows posts containing only images (can be overridden for individual boards)
   allow_textless_posts: false
   # How many posts (not counting OP) to display on board page for each thread
@@ -27,5 +23,9 @@ attachments:
   hashing_algorithm: sha1
   # Attachments preview size (for thumbnails generation)
   preview_size: [300, 300]
+  # Maximum attachment size in bytes (can be overridden for individual boards)
+  max_file_size: 10485760
+  # Maximum attachments count for single post (can be overridden for individual boards)
+  max_files_per_post: 5
 flask:
   SERVER_NAME: 127.0.0.1:5000

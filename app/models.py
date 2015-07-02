@@ -53,8 +53,8 @@ class Board(Model):
     tag = Column(db.String(16), unique=True, nullable=False)
     title = Column(db.String(150), nullable=False)
     new_thread_requires_file = Column(db.Boolean, default=True)
-    max_file_size = Column(db.Integer, default=config['app']['max_file_size'])
-    max_files_per_post = Column(db.Integer, default=config['app']['max_files_per_post'])
+    max_file_size = Column(db.Integer, default=config['attachments']['max_file_size'])
+    max_files_per_post = Column(db.Integer, default=config['attachments']['max_files_per_post'])
     allow_textless_posts = Column(db.Boolean, default=config['app']['allow_textless_posts'])
 
     def __repr__(self):
