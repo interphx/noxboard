@@ -1,4 +1,6 @@
 import os
+import pyparsing
+from pyparsing import Word
 from app.attachments import createAttachment, AttachmentTooLargeException, AttachmentNotSupportedException, TooManyAttachmentsException
 from app import config, db
 from flask import Blueprint, request, redirect, url_for, render_template, send_from_directory
@@ -39,6 +41,23 @@ def createAttachmentsFromForm(form):
     
     return result
 
+def transformPostLinks(s):
+    link_rule = ">>" + Word(pyparsing.nums)
+    links_count = 0
+    def makeLink(s):
+        nonlocal links_count
+        post_id = int(s[1]) # because post id is the second matched element
+        post = Post.query.get(post_id)
+        if not post: return s
+        thread = post.thread
+        # TODO: Move hardcoded value to settings
+        if links_count > 30: return s
+        href = url_for('.thread', board_tag=thread.board.tag, thread_id=thread.id) + "#post-" + str(post_id)
+        return '<a href="{0}" class="postlink" data-post-id="{1}" data-thread-id="{2}">&gt;&gt;{3}</a>'.format(href, str(post_id), str(thread.id), str(post_id))
+    link_rule.setParseAction(makeLink)
+    
+    return link_rule.transformString(s)
+
 # TODO: Probably we need to commit attachments
 def createPostFromForm(form, thread, is_op):
     # TODO: change to form validator or other clean way
@@ -51,7 +70,7 @@ def createPostFromForm(form, thread, is_op):
         author_name  = form.author_name.data,
         author_email = form.author_email.data,
         topic        = form.topic.data,
-        text         = form.text.data,
+        text         = transformPostLinks(form.text.data),
         thread       = thread
     )
     
@@ -142,12 +161,12 @@ def thread(board_tag, thread_id):
             post = createPostFromForm(postForm, thread, False)
             db.session.add(post)
             
-        except:
+        except Exception as e:
             print('!!!!!!!!!!!!!!!!!!!!!!')
             print('Exception: doing rollback (call from thread)')
             print('!!!!!!!!!!!!!!!!!!!!!!')
             db.session.rollback()
-            #raise e
+            raise e
         else:
             db.session.commit()
             if postForm.redirect_to.data == 'thread':

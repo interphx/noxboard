@@ -1,7 +1,7 @@
 {% from 'attachment_rendering.jinja2' import render_attachment %}
 
 {% macro render_post(post, locked_icon=false, pinned_icon=false, thread_link=false) -%}
-<div class="post{{ ' op' if post.is_op }}" data-post-id="{{post.id}}">
+<div id="post-{{post.id}}" class="post{{ ' op' if post.is_op }}" data-post-id="{{post.id}}">
 	<div class="header">
 		<label>
 			{% if post.topic %}<span class="topic">{{ post.topic }}</span>{% endif %}
@@ -24,7 +24,7 @@
 	</div>
 	
 	<div class="text">
-	{{ post.text|e|urlize|aib_markup|safe }}
+	{{ post.text|safe|post_smart_escape|urlize|aib_markup|safe }}
 	</div>
 	<div class="clearfix"></div>
 </div>

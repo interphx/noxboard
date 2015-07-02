@@ -174,6 +174,7 @@ var App = function(){
 					})
 					.onExpire(function() {
 						try {
+							$('.autoupdate-countdown').html('Автообновление...');
 							self.updateThreads();
 						} catch(e) {
 							

@@ -1,6 +1,7 @@
 import re
 import jinja2
 import pyparsing
+import bleach
 from pyparsing import QuotedString, ParserElement, LineStart, LineEnd, SkipTo, OneOrMore, restOfLine
 
 ParserElement.setDefaultWhitespaceChars(' \t')
@@ -41,4 +42,25 @@ grammar = OneOrMore(tokens)
 def aib_markup(s):
     return grammar.transformString(s)
 
+# TODO: Probably find a better way to sanitize only output without allowing users to use HTML postlinks directly
+def post_smart_escape(s):
+    allowed_tags = ['a']
+    
+    valid_postlink_href = re.compile(r'/[a-zA-Z0-9_]+/thread/[0-9]+/#post\-[0-9]+', re.IGNORECASE)
+    valid_id = re.compile(r'[0-9]+')
+    
+    # Allows only postlinks
+    def filter_link_attribute(name, value):
+        if name not in ['href', 'class', 'data-post-id', 'data-thread-id']: return False
+        if name == 'href' and not valid_postlink_href.match(value): return False
+        if name == 'class' and value != 'postlink': return False
+        if name in ['data-post-id', 'data-thread-id']:
+            if not valid_id.match(value): return False
+        return True
+    
+    allowed_attributes = {'a': filter_link_attribute}
+    return jinja2.Markup( bleach.clean(s, tags=allowed_tags, attributes=allowed_attributes) )
+
 jinja2.filters.FILTERS['aib_markup'] = aib_markup
+jinja2.filters.FILTERS['post_smart_escape'] = post_smart_escape
+
