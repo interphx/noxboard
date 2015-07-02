@@ -1,2 +1,31 @@
+app: 
+  # Where to look for templates
+  template_dir: templates
+  # Static conent will be served from this directory. In production configure your web server to serve static content instead!
+  static_dir: static
+  # You can use sqlite:///filename to create a SQLite database file in app folder.
+  # You can use mysql://user:password@server to connect to MySQL (better use this in production).
+  database_uri: sqlite:///test.db
+  # Maximum attachment size in bytes (can be overridden for individual boards)
+  max_file_size: 10485760
+  # Maximum attachments count for single post (can be overridden for individual boards)
+  max_files_per_post: 5
+  # Allows posts containing only images (can be overridden for individual boards)
+  allow_textless_posts: false
+  # How many posts (not counting OP) to display on board page for each thread
+  thread_preview_posts_count: 3
+  # Default threads per board page (can be changed in user settings (TODO))
+  default_threads_per_page: 3
+  # Maximum threads per page a user can request
+  max_threads_per_page: 3
+  # CSRF protection secret key; change to unique value
+  csrf_secret_key: deepthroatanalpenetration
+attachments:
+  # Attachment will be downloaded in this folder subdirectories
+  base_dir: uploads
+  # Hashing algorithm for attachments. Changing this setting will not re-generate hashes in your database! Do not change unless you know what you are doing
+  hashing_algorithm: sha1
+  # Attachments preview size (for thumbnails generation)
+  preview_size: [300, 300]
 flask:
   SERVER_NAME: 127.0.0.1:5000

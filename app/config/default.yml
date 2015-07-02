@@ -14,4 +14,5 @@ attachments:
   base_dir: uploads
   hashing_algorithm: sha1
   preview_size: [300, 300]
-flask: {}
+flask:
+  SERVER_NAME: 127.0.0.1:5000
