@@ -81,7 +81,6 @@ var nodeFactory = new (function(){
 		},
 		
 		buildFromData: function buildFromData(template_name, data) {
-			console.log(this);
 			var node = $(self.templates[template_name]);
 			if (template_name == 'post') {
 				node.attr('data-post-id', data.id);

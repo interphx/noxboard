@@ -12,11 +12,15 @@ api = Blueprint('api', __name__)
 @api.route('/threads/<int:thread_id>/posts/after/<int:last_id>/')
 def posts(thread_id, last_id):
     thread = Thread.query.get(thread_id)
-    
     if not thread:
         return jsonify(**{'success': False, 'errors': ['No thread with id %s' % thread_id]}), 404
     
-    posts = Post.query.filter_by(thread=thread).filter(Post.id > last_id).all()
+    post = Post.query.get(last_id)
+    if not post:
+        return jsonify(**{'success': False, 'errors': ['No post with id %s' % last_id]}), 404
+    
+
+    posts = Post.query.filter_by(thread=thread).filter(Post.created_at >= post.created_at).filter(Post.id > last_id).all()
     posts = [post.serialize() for post in posts]
 
     return jsonify(**{'success': True, 'posts': posts})
