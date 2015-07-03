@@ -186,7 +186,7 @@ var App = function(){
 };
 
 // Some settings are set in base.html template, so app must be accessible from global scope
-app = new App();
+var app = new App();
 
 $(document).ready(function() {
 	app.init();
@@ -194,14 +194,14 @@ $(document).ready(function() {
 
 	/* Posting form */
 	$('.posting-form-toggle').each(function() {
-		$this = $(this);
+		var $this = $(this);
 		$this.html('[ ' + $this.attr('data-message-on') + ' ]');
 		$this.attr('data-form-open', false);
 	});
 
 	$('.posting-form-toggle').on('click', function() {
-		$this = $(this);
-		$posting_form = $this.next('.posting-form');
+		var $this = $(this);
+		var $posting_form = $this.next('.posting-form');
 		
 		if ($this.attr('data-form-open') == 'false') {
 			$this.html('[ ' + $this.attr('data-message-off') + ' ]');
@@ -217,8 +217,8 @@ $(document).ready(function() {
 
 	/* Youtube previews */
 	$('.yt-preview').on('click', function() {
-		$this = $(this);
-		$video = $this.next('.yt-player');
+		var $this = $(this);
+		var $video = $this.next('.yt-player');
 		$video.show();
 		$this.hide();
 	});
@@ -227,7 +227,7 @@ $(document).ready(function() {
 	
 	$autoupdate_toggles = $('input[type="checkbox"].autoupdate-toggle')
 	$autoupdate_toggles.on('change', function() {
-		$this = $(this);
+		var $this = $(this);
 		if ($this.is(':checked')) {
 			app.autoupdateCountdown.start();
 			$autoupdate_toggles.prop('checked', true);
@@ -246,8 +246,8 @@ $(document).ready(function() {
 	
 	// Helper function to smartly toggle on posting forms on a page
 	function showPostingForms() {
-		$forms = $('.posting-form')
-		$hidden_forms = $forms.filter(':hidden');
+		var $forms = $('.posting-form')
+		var $hidden_forms = $forms.filter(':hidden');
 		// If there are visible forms, do nothing
 		if ($forms.count - $hidden_forms.count > 0) { return; }
 		$hidden_forms.each(function() {
@@ -260,7 +260,7 @@ $(document).ready(function() {
 	$('.thread').on('click', 'a.reflink', function() {
 		var reflink = $(this).html().match(/\d+/);
 		$('.posting-form textarea[name="text"]').each(function() {
-			$this = $(this);
+			var $this = $(this);
 			$this.val( $this.val() + ">>" + reflink ); 
 		});
 		showPostingForms();
