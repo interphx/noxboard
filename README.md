@@ -16,7 +16,7 @@ Built-in Flask server is for debugging purposes. It is therefore advised to wait
 ### Features
 ##### Already implemented
 - Standard anonymous imageboard functionality
-- Attachments support with files uploading and URLs
+- Attachments support via files uploading and links
 - Attach YouTube videos
 - Attach Prostopleer tracks
 - Multiple attachments per post
@@ -33,7 +33,6 @@ Built-in Flask server is for debugging purposes. It is therefore advised to wait
 - Admin panel
 - Captcha support
 - REST API
-- Image preview generation
 - Even more awesome front-end
 - Caching
 - Virtualenv support
@@ -52,4 +51,4 @@ pip install flask flask-sqlalchemy flask-wtf requests pyparsing bleach
 - [requests](https://github.com/kennethreitz/requests)
 - [pyparsing](http://pyparsing.wikispaces.com/)
 - [bleach](https://github.com/jsocol/bleach)
-- Wand
+- [Wand](https://github.com/dahlia/wand/) with [ImageMagick](http://www.imagemagick.org/) (in nearest future [Pillow](https://python-pillow.github.io/) will also be supported)
