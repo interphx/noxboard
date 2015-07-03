@@ -1,6 +1,6 @@
 {% macro render_attachment(attachment, is_single=false) %}
 <div class="attachment{{ ' single' if is_single }}">
-	{% if attachment.is_local and attachment.type in ['jpg', 'png', 'gif'] %}
+	{% if attachment.is_local and attachment.type in ['image/jpeg', 'image/png', 'image/gif'] %}
 		{{ render_local_image(attachment)|safe }}
 	{% elif attachment.type == 'youtube' %}
 		{{ render_youtube_video(attachment)|safe }}
@@ -13,7 +13,7 @@
 {% endmacro %}
 
 {% macro render_local_image(image, is_single) %}
-	<a href="/{{ image.resource }}" target="_blank"><img src="/{{ image.resource }}"></a>
+	<a href="/{{ image.resource }}" target="_blank"><img src="/{{ image.resource|thumb_link(image.type) }}"></a>
 {% endmacro %}
 
 {% macro render_youtube_video(video, is_single) %}

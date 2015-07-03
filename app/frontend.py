@@ -1,7 +1,7 @@
 import os
 import pyparsing
 from pyparsing import Word
-from app.attachments import createAttachment, AttachmentTooLargeException, AttachmentNotSupportedException, TooManyAttachmentsException
+from app.attachments import createAttachment, AttachmentException, AttachmentTooLargeException, AttachmentNotSupportedException, TooManyAttachmentsException, InvalidAttachmentException
 from app import config, db
 from flask import Blueprint, request, redirect, url_for, render_template, send_from_directory
 from app.models import Board, Thread, Post, Attachment
@@ -27,7 +27,10 @@ def createAttachmentsFromForm(form):
             field.errors.append('Файл слишком большой')
             raise e
         except AttachmentNotSupportedException as e:
-            field.errors.append('Неподдерживаемый формат приложения')
+            field.errors.append('Неподдерживаемый формат вложения')
+            raise e
+        except InvalidAttachmentException as e:
+            field.errors.append('Файл сломался :с')
             raise e
         except AttachmentException as e:
             field.errors.append('Не удаётся загрузить файл')
@@ -111,7 +114,7 @@ def serve_uploaded(filename):
 def board(board_tag='b', page=1):
     board = Board.query.filter_by(tag=board_tag).first()
     
-    postForm = PostForm(1)
+    postForm = PostForm(5)
     if request.method == 'POST' and postForm.validate_on_submit():
         try:
             thread = createThreadFromForm(postForm, board)
@@ -155,7 +158,7 @@ def thread(board_tag, thread_id):
     thread = Thread.query.filter_by(id=thread_id).first()
     board = thread.board
     
-    postForm = PostForm(1)
+    postForm = PostForm(5)
     if request.method == 'POST' and postForm.validate_on_submit():
         try:
             post = createPostFromForm(postForm, thread, False)
@@ -166,7 +169,7 @@ def thread(board_tag, thread_id):
             print('Exception: doing rollback (call from thread)')
             print('!!!!!!!!!!!!!!!!!!!!!!')
             db.session.rollback()
-            raise e
+            #raise e
         else:
             db.session.commit()
             if postForm.redirect_to.data == 'thread':

@@ -52,3 +52,4 @@ pip install flask flask-sqlalchemy flask-wtf requests pyparsing bleach
 - [requests](https://github.com/kennethreitz/requests)
 - [pyparsing](http://pyparsing.wikispaces.com/)
 - [bleach](https://github.com/jsocol/bleach)
+- Wand

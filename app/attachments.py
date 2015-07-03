@@ -7,14 +7,17 @@ import io
 import os
 import re
 import json
+from urllib.parse import urlparse
 from collections import namedtuple
 from urllib.request import pathname2url
 from werkzeug import secure_filename
-from .util import download_file, getExt, isValidUrl, MemoryFile, join_path, download_bytes, FileSizeException
+from .util import download_file, getExt, isValidUrl, MemoryFile, join_path, download_bytes, FileSizeException, create_thumb, mime2ext, mime2thumb_ext
 from .models import *
 from . import config
 
 HASHING_ALOGIRITHM = config['attachments']['hashing_algorithm']
+THUMB_SIZE = tuple(config['attachments']['thumbnail_size'])
+THUMB_PATTERN = '{name}_thumb.{ext}' # TODO
 REMOTE_REQUEST_TIMEOUT = 6  # TODO
 YOUTUBE_REGEX = re.compile(r'^(?:(?:https?\:)?\/\/)?(?:www\.)?(?:youtube(?:\-nocookie)?\.com|youtu\.be)\/\S+$')
 YOUTUBE_VIDEO_ID_REGEX = re.compile(r'(?:(?:https?\:)?\/\/)?(?:www\.)?(?:youtube(?:-nocookie)?\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/ ]{11})')
@@ -35,6 +38,9 @@ class AttachmentTooLargeException(AttachmentException):
     pass
 
 class AttachmentNotSupportedException(AttachmentException):
+    pass
+    
+class InvalidAttachmentException(AttachmentException):
     pass
 
 class AttachmentsException(Exception):
@@ -90,23 +96,36 @@ class ImageUploadFetcher(Fetcher):
     # TODO: chunked upload
     # TODO: check max file size
     def receive_upload(self, file):        
-        filename = secure_filename(str(uuid.uuid4()))
-        dest = os.path.join(self.getFullDirectory(), filename + '.' + getExt(file.filename))
-        location = join_path(self.getFullDirectory(), filename + '.' + getExt(file.filename), separator='/')
+        blob = file.read()
 
-        hash = hashlib.new(HASHING_ALOGIRITHM, file.read()).hexdigest()
+        hash = hashlib.new(HASHING_ALOGIRITHM, blob).hexdigest()
         
         duplicate = Attachment.query.filter_by(hash=hash).first()
         if duplicate is not None:
             raise AttachmentExistsException(duplicate.id)
         
+        try:
+            thumb, mime = create_thumb(THUMB_SIZE, blob)
+        except:
+            raise InvalidAttachmentException('Invalid file')
+        
+        filename = secure_filename(str(uuid.uuid4()))
+        
+        full_filename = filename + '.' + mime2ext(mime)
+        thumb_filename = THUMB_PATTERN.format(name=filename, ext=mime2thumb_ext(mime))
+
+        dest = os.path.join(self.getFullDirectory(), full_filename)
+        thumb_dest = os.path.join(self.getFullDirectory(), thumb_filename)
+        
+        location = join_path(self.getFullDirectory(), full_filename, separator='/')
+        
         file.seek(0)
         file.save(dest)
-        return location, hash
+        thumb.save(filename=thumb_dest)
+        return location, hash, mime
     
     def fetch(self, task):
-        [location, hash] = self.receive_upload(task)
-        type = getExt(task.filename)
+        [location, hash, type] = self.receive_upload(task)
         return AttachmentData(resource=pathname2url(location), type=type, local=True, hash=hash)
 
 class RemoteImageFetcher(Fetcher):
@@ -137,15 +156,12 @@ class RemoteImageFetcher(Fetcher):
         # TODO: request headers just once
         content_type = response.headers.get('content-type')
         
-        extension = mimetypes.guess_extension(content_type).lstrip('.')
-        if extension in ['jpeg', 'jpe', 'jfif']: extension = 'jpg' # TODO
-        
-        dest = os.path.join(self.getFullDirectory(), filename + '.' + extension)
-        
         try:
             file = download_bytes(url, MemoryFile(), max_file_size=self.max_file_size)
         except FileSizeException:
             raise AttachmentTooLargeException('File is too large!')
+        
+        blob = file.getvalue()
 
         hash = hashlib.new(HASHING_ALOGIRITHM, file.getvalue()).hexdigest()
         
@@ -153,14 +169,30 @@ class RemoteImageFetcher(Fetcher):
         if duplicate is not None:
             raise AttachmentExistsException(duplicate.id)
         
+        try:
+            thumb, mime = create_thumb(THUMB_SIZE, blob)
+        except:
+            raise InvalidAttachmentException('Invalid file')
+        
+        filename = secure_filename(str(uuid.uuid4()))
+        
+        full_filename = filename + '.' + mime2ext(mime)
+        thumb_filename = THUMB_PATTERN.format(name=filename, ext=mime2thumb_ext(mime))
+
+        dest = os.path.join(self.getFullDirectory(), full_filename)
+        thumb_dest = os.path.join(self.getFullDirectory(), thumb_filename)
+        
+        location = join_path(self.getFullDirectory(), full_filename, separator='/')
+        
         file.seek(0)
         file.save(dest)
+        thumb.save(filename=thumb_dest)
         
-        return dest, extension, hash
+        return dest, hash, mime
     
     def fetch(self, task):
-        [location, extension, hash] = self.download(task)
-        return AttachmentData(resource=pathname2url(location), type=extension, local=True, hash=hash)
+        [location, hash, type] = self.download(task)
+        return AttachmentData(resource=pathname2url(location), type=type, local=True, hash=hash)
         
 class YoutubeFetcher(Fetcher):
     def __init__(self, name):

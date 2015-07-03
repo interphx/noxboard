@@ -35,12 +35,12 @@ import app.models
 import app.attachments
 attachments.registerFetcher('file', attachments.ImageUploadFetcher(
     name = 'upload_images',
-    whitelist = ['jpg', 'png', 'gif', 'tga', 'bmp'],
+    whitelist = ['jpg', 'jpeg', 'png', 'gif', 'tiff', 'tif', 'bmp'],
     directory = 'images'
 ))
 attachments.registerFetcher('link', attachments.RemoteImageFetcher(
     name = 'remote_images',
-    whitelist = ['image/jpeg', 'image/png', 'image/gif'],
+    whitelist = ['image/jpeg', 'image/png', 'image/gif', 'image/tiff', 'image/x-ms-bmp', 'image/bmp', 'image/x-windows-bmp'],
     directory = 'images'
 ))
 attachments.registerFetcher('link', attachments.YoutubeFetcher(

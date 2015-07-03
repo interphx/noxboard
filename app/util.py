@@ -6,6 +6,7 @@ import os
 from app import config
 from functools import wraps
 from flask import render_template, jsonify
+from wand.image import Image
 
 FILE_DOWNLOAD_TIMEOUT = 12
 FILE_DOWNLOAD_CHUNK_SIZE = 1024
@@ -19,6 +20,60 @@ VALID_URL_REGEX = re.compile(
     r'(?::\d+)?' # optional port
     r'(?:/?|[/?]\S+)$', re.IGNORECASE
 )
+
+MIME_TO_THUMBNAIL_EXT = {
+    'image/jpeg': 'jpg',
+    'image/x-ms-bmp': 'jpg',
+    'image/x-windows-bmp': 'jpg',
+    'image/bmp': 'jpg',
+    
+    'image/jp2': 'png',
+    'image/jpx': 'png',
+    'image/jpm': 'png',
+    'image/tiff': 'png',
+    'image/png': 'png',
+    'image/gif': 'png'
+}
+
+class InvalidImageException(Exception):
+    pass
+
+def create_thumb(size, blob):
+    '''Creates proportionally scaled thumbnail and save to destination. Returns thumbnaill location and source mimetype'''
+    mimetype = None
+    with Image(blob=blob) as source:
+        image = Image(source.sequence[0]) if source.sequence else source
+        
+        mimetype = image.mimetype
+        if mimetype == None:
+            raise InvalidImageException('Invalid image mimetype!')
+        
+        w, h = image.size
+        if w > size[0]:
+            h = int(max(h * size[0] / w, 1))
+            w = int(size[0])
+        if h > size[1]:
+            w = int(max(w * size[1] / h, 1))
+            h = int(size[1])
+        size = w, h
+
+        if size == image.size:
+            #image.save(filename=destination + '.' + extension)
+            return image, mimetype
+    
+        image.sample(*size)
+        #image.save(filename=destination + '.' + extension)
+
+        return image, mimetype
+
+def mime2ext(mimetype):
+    if mimetype == 'image/jpeg': return 'jpg'
+    if mimetype == 'image/png' : return 'png'
+    if mimetype == 'image/gif' : return 'gif'
+    return mimetypes.guess_extension(mimetype).split('.')[1]
+
+def mime2thumb_ext(mimetype):
+    return MIME_TO_THUMBNAIL_EXT.get(mimetype, 'jpg')
 
 def join_path(*args, separator=os.path.sep, trailing=False):
     result = ''
