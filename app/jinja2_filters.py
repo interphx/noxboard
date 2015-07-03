@@ -2,6 +2,7 @@ import re
 import jinja2
 import pyparsing
 import bleach
+from .attachments import THUMB_PATTERN
 from pyparsing import QuotedString, ParserElement, LineStart, LineEnd, SkipTo, OneOrMore, restOfLine
 from .util import mime2thumb_ext
 
@@ -65,8 +66,12 @@ def post_smart_escape(s):
 def remove_miliseconds(s):
     return str(s).rsplit('.', 1)[0]
 
-def thumb_link(s, mimetype):
-    return s.rsplit('.', 1)[0] + '_thumb.' + mime2thumb_ext(mimetype)
+def thumb_link(attachment):
+    filename = attachment.resource.rsplit('.', 1)[0]
+    extension = mime2thumb_ext(attachment.type)
+    
+    return THUMB_PATTERN.format(name=filename, ext=extension)
+    #return s.rsplit('.', 1)[0] + '_thumb.' + mime2thumb_ext(mimetype)
 
 jinja2.filters.FILTERS['aib_markup'] = aib_markup
 jinja2.filters.FILTERS['post_smart_escape'] = post_smart_escape

@@ -13,7 +13,7 @@
 {% endmacro %}
 
 {% macro render_local_image(image, is_single) %}
-	<a href="/{{ image.resource }}" target="_blank"><img src="/{{ image.resource|thumb_link(image.type) }}"></a>
+	<a href="/{{ image.resource }}" target="_blank"><img src="/{{ image|thumb_link }}"></a>
 {% endmacro %}
 
 {% macro render_youtube_video(video, is_single) %}

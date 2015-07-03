@@ -144,6 +144,14 @@ hr {
 	text-align: left;
 }
 
+.posting-form tr.field.has_errors {
+	border: 1px solid #924;
+}
+
+html.js .nojs-only.posting-form.has_errors {
+	display: block;
+}
+
 .posting-form-toggle {
 	color: #0096ff;
 	cursor: pointer;

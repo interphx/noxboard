@@ -85,34 +85,34 @@
 {% macro render_posting_form(postForm, config, files_count, toggle_message_on="Показать форму", toggle_message_off="Скрыть форму") -%}
 <div class="posting-form-container">
 	<span class="posting-form-toggle js-only" data-form-open="false" data-message-on="{{ toggle_message_on }}" data-message-off="{{ toggle_message_off }}">[ {{ toggle_message_on }} ]</span>
-	<form class="posting-form nojs-only" method="POST" enctype="multipart/form-data">
+	<form class="posting-form nojs-only{{ ' has_errors' if postForm.errors }}" method="POST" enctype="multipart/form-data">
 		<table>
-			<tr class="field">
+			<tr class="field{{ ' has_errors' if postForm.author_name.errors }}">
 				<td class="name">Имя</td>
 				<td class="widget"><input type="text" size="28" name="author_name"></td>
 				<td class="errors">{{ render_errors(postForm.author_name)|safe }}</td>
 			</tr>
 			
-			<tr class="field">
+			<tr class="field{{ ' has_errors' if postForm.author_email.errors }}">
 				<td class="name">E-mail</td>
 				<td class="widget"><input type="text" size="28" name="author_email"></td>
 				<td class="errors">{{ render_errors(postForm.author_email)|safe }}</td>
 			</tr>
 		
-			<tr class="field">
+			<tr class="field{{ ' has_errors' if postForm.topic.errors }}">
 				<td class="name">Тема</td>
 				<td class="widget"><input type="text" size="28" name="topic"></td>
 				<td class="errors">{{ render_errors(postForm.topic)|safe }}</td>
 			</tr>
 			
-			<tr class="field">
+			<tr class="field{{ ' has_errors' if postForm.text.errors }}">
 				<td class="name">Текст</td>
 				<td class="widget"><textarea rows="4" cols="48" name="text"></textarea></td>
 				<td class="errors">{{ render_errors(postForm.text)|safe }}</td>
 			</tr>
 
 			{% for file_field in postForm.files %}
-			<tr class="field">
+			<tr class="field{{ ' has_errors' if file_field.errors }}">
 				<td class="name">Файл</td>
 				<td class="widget"><input type="file"  name="{{ file_field.name }}"></td>
 				<td class="errors">{{ render_errors(file_field)|safe }}</td>
@@ -120,7 +120,7 @@
 			{% endfor %}
 			
 			{% for link_field in postForm.links %}
-			<tr class="field">
+			<tr class="field{{ ' has_errors' if link_field.errors }}">
 				<td class="name">Ссылка</td>
 				<td class="widget"><input type="text" size="48" name="{{ link_field.name }}"></td>
 				<td class="errors">{{ render_errors(link_field)|safe }}</td>
