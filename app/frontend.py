@@ -20,7 +20,9 @@ def createAttachmentsFromForm(form):
         nonlocal count
         if not field.data: return
         count += 1
-        if count > config['attachments']['max_files_per_post']: raise TooManyAttachmentsException('Too many files')
+        if count > config['attachments']['max_files_per_post']: 
+            return
+            #raise TooManyAttachmentsException('Too many files')
         try:
             result.append(createAttachment(type, field.data))
         except AttachmentTooLargeException as e:
@@ -41,6 +43,9 @@ def createAttachmentsFromForm(form):
 
     for link_field in form.links:
         createWithErrors('link', link_field)
+        
+    if count > config['attachments']['max_files_per_post']: 
+        print('Client attempted to send more attachments than possible (%s)' % str(count))
     
     return result
 

@@ -10,11 +10,11 @@ app:
   # Allows posts containing only images (can be overridden for individual boards)
   allow_textless_posts: false
   # How many posts (not counting OP) to display on board page for each thread
-  thread_preview_posts_count: 3
+  thread_preview_posts_count: 5
   # Default threads per board page (can be changed in user settings (TODO))
-  default_threads_per_page: 3
+  default_threads_per_page: 10
   # Maximum threads per page a user can request
-  max_threads_per_page: 3
+  max_threads_per_page: 20
   # CSRF protection secret key; change to unique value
   csrf_secret_key: deepthroatanalpenetration
 attachments:
