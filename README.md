@@ -42,7 +42,7 @@ Built-in Flask server is for debugging purposes. It is therefore advised to wait
 ### Dependencies
 Everything is easily installable with pip:
 ```
-pip install flask flask-sqlalchemy flask-wtf requests pyparsing bleach
+pip install flask flask-sqlalchemy flask-wtf requests pyparsing bleach pyyaml wand
 ```
 - Python 3.4 or newer
 - [Flask](http://github.com/mitsuhiko/flask)
@@ -51,4 +51,5 @@ pip install flask flask-sqlalchemy flask-wtf requests pyparsing bleach
 - [requests](https://github.com/kennethreitz/requests)
 - [pyparsing](http://pyparsing.wikispaces.com/)
 - [bleach](https://github.com/jsocol/bleach)
+- [pyyaml](http://pyyaml.org/)
 - [Wand](https://github.com/dahlia/wand/) with [ImageMagick](http://www.imagemagick.org/) (in nearest future [Pillow](https://python-pillow.github.io/) will also be supported)
