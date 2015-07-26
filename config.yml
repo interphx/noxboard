@@ -29,5 +29,6 @@ attachments:
   # Maximum attachments count for single post (can be overridden for individual boards)
   max_files_per_post: 5
 flask:
+  # Change host to 0.0.0.0 to be visible across the network
   HOST: 127.0.0.1
   PORT: 5000
