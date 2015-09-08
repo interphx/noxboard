@@ -1,6 +1,6 @@
 # Noxboard
 
-A modern forum/imageboard engine built with Flask framework. Usable, but work in progress.
+A modern forum/imageboard engine prototype built with Flask framework. Usable, but work in progress.
 
 ### Installation
 1. Install the [dependencies](#dependencies)
